@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile (warehouse_inventory.cpp)
+        run: g++ -Wall -fsyntax-only warehouse_inventory.cpp
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install tooling
+        run: pip install pytest ruff
+      - name: Lint
+        run: ruff check .
+      - name: Test
+        run: pytest -q
